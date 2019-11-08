@@ -1,0 +1,41 @@
+﻿<Page
+    x:Class="UltraBorgUI.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UltraBorgUI"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"  DataContext="{Binding RelativeSource={RelativeSource Self}}"
+    Background="Black" Loaded="Page_Loaded" >
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20*"/>
+            <ColumnDefinition Width="20*"/>
+            <ColumnDefinition Width="20*"/>
+            <ColumnDefinition Width="20*"/>
+            <ColumnDefinition Width="20*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80*"/>
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="60"/>
+        </Grid.RowDefinitions>
+       
+        <local:MotorTuningControl x:Name="cntlServo1" Margin="2" Grid.Row="0" Grid.Column="0" TitleText="Servo1" ServoNo="1"/>
+        <local:MotorTuningControl x:Name="cntlServo2"  Margin="2"  Grid.Row="0" Grid.Column="1" TitleText="Servo2" ServoNo="2"/>
+        <local:MotorTuningControl x:Name="cntlServo3"  Margin="2"  Grid.Row="0" Grid.Column="2" TitleText="Servo3" ServoNo="3"/>
+        <local:MotorTuningControl x:Name="cntlServo4" Margin="2"  Grid.Row="0" Grid.Column="3" TitleText="Servo4" ServoNo="4"/>
+        <local:SonicDistanceControl x:Name="cntlSonic1" Margin="2" Grid.Row="1" Grid.Column="0" TitleText="Sonic Controller 1" SensorNo="1"/>
+        <local:SonicDistanceControl x:Name="cntlSonic2" Margin="2" Grid.Row="1" Grid.Column="1" TitleText="Sonic Controller 2" SensorNo="2"/>
+        <local:SonicDistanceControl x:Name="cntlSonic3" Margin="2" Grid.Row="1" Grid.Column="2" TitleText="Sonic Controller 3" SensorNo="3"/>
+        <local:SonicDistanceControl x:Name="cntlSonic4" Margin="2" Grid.Row="1" Grid.Column="3" TitleText="Sonic Controller 4" SensorNo="4"/>
+        <Button Grid.Row="2" Grid.Column="4"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="btnExit_Click">Exit</Button>
+        <StackPanel  Grid.Row="0" Grid.Column="4">
+            <Image Margin="19" Source="Images/PIBorg.JPG" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+            <TextBlock Text="UltraBorg" Foreground="Gainsboro" FontWeight="Bold" FontSize="25" HorizontalAlignment="Center"/>
+            <Image Margin="19" Source="Images/UltraBorg.JPG" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        </StackPanel>
+
+    </Grid>
+</Page>
