@@ -36,6 +36,6 @@
             <TextBlock Text="UltraBorg" Foreground="Gainsboro" FontWeight="Bold" FontSize="25" HorizontalAlignment="Center"/>
             <Image Margin="19" Source="Images/UltraBorg.JPG" HorizontalAlignment="Center" VerticalAlignment="Top"/>
         </StackPanel>
-
+        <TextBlock Margin="5" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding ProviderName}"/>
     </Grid>
 </Page>

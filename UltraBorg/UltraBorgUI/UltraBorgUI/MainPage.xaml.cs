@@ -17,6 +17,9 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.Devices.Gpio;
+using Windows.Devices.Pwm;
+using Microsoft.IoT.Lightning.Providers;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -28,7 +31,7 @@ namespace UltraBorgUI
     public sealed partial class MainPage : Page,INotifyPropertyChanged
     {
         private Ultraborg ultraborg { get; set; }
-
+        public String ProviderName { get; set; }
 
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -48,7 +51,6 @@ namespace UltraBorgUI
         }
 
 
-
         private void btnExit_Click(object sender, RoutedEventArgs e)
         {
             CoreApplication.Exit();
@@ -58,8 +60,13 @@ namespace UltraBorgUI
             MessageDialog dlg;
             try
             {
+                var useLightningProvider = LightningProvider.IsLightningEnabled;
+                if (useLightningProvider)
+                    ProviderName = "Controller Driver = Lightning";
+                else
+                    ProviderName = "Controller Driver = Default";
 
-                var initResult = await ultraborg.Init();
+                var initResult = await ultraborg.Init(useLightningProvider);
                 if (!initResult)
                 {
                     dlg = new MessageDialog("PIBorg Init failure");
@@ -81,7 +88,51 @@ namespace UltraBorgUI
                 dlg = new MessageDialog("PIBorg initialization exception:" + ex.Message);
                 await dlg.ShowAsync();
             }
+
+            RaisePropertyChanged("ProviderName");
         }
 
+        private async  void BtnLGBOn_Click(object sender, RoutedEventArgs e)
+        {
+            var gpio = GpioController.GetDefault();
+            var pwm = await PwmController.GetDefaultAsync();
+
+            var pinR = gpio.OpenPin(26);
+            var pinG = gpio.OpenPin(6);
+            var pinB = gpio.OpenPin(13);
+
+            pinR.SetDriveMode(GpioPinDriveMode.Output);
+            pinG.SetDriveMode(GpioPinDriveMode.Output);
+            pinB.SetDriveMode(GpioPinDriveMode.Output);
+
+            pinR.Write(GpioPinValue.High);
+            pinG.Write(GpioPinValue.High);
+            pinB.Write(GpioPinValue.High);
+        }
+
+        private async void BtnLGBOff_Click(object sender, RoutedEventArgs e)
+        {
+            MessageDialog dlg;
+            try
+            {
+                var gpio = GpioController.GetDefault();
+                var pinR = gpio.OpenPin(26);
+                //var pinG = gpio.OpenPin(19);
+                var pinB = gpio.OpenPin(13);
+
+                pinR.SetDriveMode(GpioPinDriveMode.Output);
+                //pinG.SetDriveMode(GpioPinDriveMode.Output);
+                pinB.SetDriveMode(GpioPinDriveMode.Output);
+
+                pinR.Write(GpioPinValue.High);
+                //pinG.Write(GpioPinValue.High);
+                pinB.Write(GpioPinValue.High);
+            }
+            catch (Exception ex)
+            {
+                dlg = new MessageDialog("Unable to open pin: " + ex.Message);
+                await dlg.ShowAsync();
+            }
+        }
     }
 }

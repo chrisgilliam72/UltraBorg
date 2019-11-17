@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.Enumeration;
 using Windows.Devices.I2c;
+using Microsoft.IoT.Lightning.Providers;
 
 namespace UltraborgLib
 {
@@ -67,21 +68,31 @@ namespace UltraborgLib
         {
         }
 
-        public async Task<bool> Init()
+        public async Task<bool> Init(bool useLightning)
         {
             // Set the I2C address and speed
             var settings = new I2cConnectionSettings(I2C_ID_SERVO_USM);
             settings.BusSpeed = I2cBusSpeed.StandardMode;
 
-            // Try to find the UltraBorg on the I2C bus
-            string aqs = I2cDevice.GetDeviceSelector();
-            var dis = await DeviceInformation.FindAllAsync(aqs);
-            ubI2C = await I2cDevice.FromIdAsync(dis[0].Id, settings);
+            if (useLightning && LightningProvider.IsLightningEnabled)
+            {
+                I2cController controller = (await I2cController.GetControllersAsync(LightningI2cProvider.GetI2cProvider()))[0];
+                ubI2C = controller.GetDevice(settings);
+            }
+            else
+            {
+
+
+                // Try to find the UltraBorg on the I2C bus
+                string aqs = I2cDevice.GetDeviceSelector();
+                var dis = await DeviceInformation.FindAllAsync(aqs);
+                ubI2C = await I2cDevice.FromIdAsync(dis[0].Id, settings);
+              
+            }
+
             return ubI2C != null;
 
         }
-
-
 
 
 
